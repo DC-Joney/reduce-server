@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package jraft;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+import "consistency.proto";
+
+option java_package = "org.common.rpc";
+option java_multiple_files = true;
+
+message HeartBeatRequest {
+  // 请求时间
+  google.protobuf.UInt64Value timestamp = 1;
+  //请求体
+  bytes payload = 2;
+}
+
+message HeartBeatResponse {
+  bool success = 1;
+  string errorMessage = 2;
+  bytes data = 3;
+}
+
+
+message KeyDistributionRequest {
+
+  string workerId = 1;
+
+  HotKeyRequest meta = 2;
+
+}
+
+message WorkerReportRequest {
+
+  string workerId = 1;
+
+  int64 startTime = 2;
+}
+
+
+message WorkerInfoRequest {
+
+  WorkerReportRequest workerMeta = 1;
+
+  //worker所在的raft节点
+  string raftPeer = 3;
+}
+
+
+
+
+
+message ServerChangeRequest {
+  //change后的server节点
+  repeated string servers = 1;
+
+
+}
+
+
+message ServerInfoRequest {
+
+  int32 leaderTerm = 1;
+
+}
+
+
+message KeyRuleRequest {
+  repeated string keys = 1;
+}
+
+message KeyRulesResponse {
+  repeated string keys = 1;
+}
+
+message KeyRule {
+
+}
+
+enum ServerState {
+  LEADER_STOP = 0;
+  LEADER_START = 1;
+
+}
+
+
+message ServerStateChangeRequest {
+
+  int32 term = 1;
+
+  ServerState state = 2;
+
+}
+
+message HotKeyReportRequest {
+
+  string appName = 1;
+
+  string key = 2;
+
+  int64  count = 3;
+
+  int64  intervalMs = 4;
+
+  int64  currentTime = 5;
+
+}
+
+message ServerConnectedFailRequest {
+
+  repeated string oldServers = 1;
+
+}
+
+
+
+message ServerMetaResponse {
+  int32 leaderTerm = 1;
+  string leader = 2;
+  repeated string servers = 3;
+}
+
+
+message NoticeLeaderConnectRequest {
+
+}
+
+
+
+
+message ReDistributionKeys {
+  map<string,google.protobuf.ListValue> allKeys = 1;
+}
+

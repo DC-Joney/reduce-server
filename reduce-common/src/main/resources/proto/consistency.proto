@@ -1,0 +1,98 @@
+/*
+ * Copyright 1999-2018 Alibaba Group Holding Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.common.raft";
+
+import "google/protobuf/timestamp.proto";
+
+
+enum WriteType {
+  WRITE = 0;
+  DELETE = 1;
+}
+
+
+message HotKeyRequest {
+
+  //创建时间
+  int64 createTime = 1;
+
+  //热点key
+  string key = 2;
+
+  //app名称
+  string appName = 3;
+
+  //请求的次数
+  int32 count = 4;
+
+  //是删除还是添加
+  WriteType type = 5;
+}
+
+message SearchKeyRequest {
+
+  string appName = 1;
+  string key = 3;
+
+}
+
+
+message SearchKeyResponse {
+
+  Response response = 2;
+
+  string appName = 1;
+  string key = 3;
+  uint64 count = 4;
+
+}
+
+
+message Response {
+  string errMsg = 2;
+  bool success = 3;
+  bytes data = 4;
+}
+
+message AppMessage {
+
+  string appName = 1;
+
+  int64 startTime = 2;
+
+}
+
+message TestWriteRequest {
+  string appName = 1;
+  string value = 2;
+
+}
+
+
+service BiRequest {
+  // Sends a commonRequest
+  rpc request (AppMessage) returns (stream Response) {
+  }
+}
+
+
+
+
+
